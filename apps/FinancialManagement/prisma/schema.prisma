@@ -1,0 +1,23 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model IncomeAndExpenses {
+  amount      Float?
+  createdAt   DateTime                        @default(now())
+  date        DateTime?
+  description String?
+  id          String                          @id @default(cuid())
+  typeField   EnumIncomeAndExpensesTypeField?
+  updatedAt   DateTime                        @updatedAt
+  verifiedBy  String?
+}
+
+enum EnumIncomeAndExpensesTypeField {
+  Option1
+}
