@@ -1,0 +1,17 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Inventory {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  itemName  String?
+  manager   String?
+  quantity  Int?
+  updatedAt DateTime @updatedAt
+}
