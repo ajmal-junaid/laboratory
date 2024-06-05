@@ -1,0 +1,120 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Lab {
+  address   String?
+  createdAt DateTime   @default(now())
+  employees Employee[]
+  id        String     @id @default(cuid())
+  name      String?
+  trainees  Trainee[]
+  updatedAt DateTime   @updatedAt
+}
+
+model Role {
+  createdAt DateTime   @default(now())
+  employees Employee[]
+  id        String     @id @default(cuid())
+  name      String?
+  updatedAt DateTime   @updatedAt
+}
+
+model Attendance {
+  createdAt  DateTime              @default(now())
+  date       DateTime?
+  employee   Employee?             @relation(fields: [employeeId], references: [id])
+  employeeId String?
+  id         String                @id @default(cuid())
+  status     EnumAttendanceStatus?
+  updatedAt  DateTime              @updatedAt
+}
+
+model Employee {
+  attendances   Attendance[]
+  createdAt     DateTime     @default(now())
+  dateOfJoining DateTime?
+  email         String?
+  firstName     String?
+  id            String       @id @default(cuid())
+  lab           Lab?         @relation(fields: [labId], references: [id])
+  labId         String?
+  lastName      String?
+  phoneNumber   String?
+  role          Role?        @relation(fields: [roleId], references: [id])
+  roleId        String?
+  updatedAt     DateTime     @updatedAt
+}
+
+model TraineeAttendance {
+  createdAt DateTime                     @default(now())
+  date      DateTime?
+  id        String                       @id @default(cuid())
+  status    EnumTraineeAttendanceStatus?
+  trainee   Trainee?                     @relation(fields: [traineeId], references: [id])
+  traineeId String?
+  updatedAt DateTime                     @updatedAt
+}
+
+model Trainee {
+  createdAt          DateTime            @default(now())
+  dateOfJoining      DateTime?
+  email              String?
+  firstName          String?
+  id                 String              @id @default(cuid())
+  lab                Lab?                @relation(fields: [labId], references: [id])
+  labId              String?
+  lastName           String?
+  phoneNumber        String?
+  traineeAttendances TraineeAttendance[]
+  updatedAt          DateTime            @updatedAt
+}
+
+model IncomeAndExpenses {
+  amount      Float?
+  createdAt   DateTime                        @default(now())
+  date        DateTime?
+  description String?
+  id          String                          @id @default(cuid())
+  typeField   EnumIncomeAndExpensesTypeField?
+  updatedAt   DateTime                        @updatedAt
+  verifiedBy  String?
+}
+
+model Inventory {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  itemName  String?
+  manager   String?
+  quantity  Int?
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  createdAt DateTime @default(now())
+  email     String?  @unique
+  firstName String?
+  id        String   @id @default(cuid())
+  lastName  String?
+  password  String
+  roles     Json
+  updatedAt DateTime @updatedAt
+  username  String   @unique
+}
+
+enum EnumAttendanceStatus {
+  Option1
+}
+
+enum EnumTraineeAttendanceStatus {
+  Option1
+}
+
+enum EnumIncomeAndExpensesTypeField {
+  Option1
+}
